@@ -1,0 +1,13 @@
+div.SpaceShip {
+  position: absolute;
+  
+  color: #ccc;
+  width: 64px;
+  height: 64px;
+  background-image: url('../../../resources/M484BulletCollection1.png');
+  background-repeat: no-repeat;
+  background-size: 4000px 2480px;
+  background-position: -1312px -808px;
+  image-rendering: pixelated;
+  rotate: -90deg;
+}

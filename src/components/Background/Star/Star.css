@@ -1,0 +1,35 @@
+div.Star {
+  position: absolute;
+  background-image: url('../../../resources/16ShipCollection.png');
+  background-repeat: no-repeat;
+  background-size: 1000px 620px;
+  image-rendering: pixelated;
+}
+
+@keyframes movement {
+  from {
+    top: 0px;
+  }
+
+  to {
+    top: 600px;
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0.5;
+  }
+
+  25% {
+    opacity: 0.05;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  75% {
+    opacity: 0.05;
+  }
+}
