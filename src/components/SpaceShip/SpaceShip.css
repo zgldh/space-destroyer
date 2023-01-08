@@ -2,8 +2,6 @@ div.SpaceShip {
   position: absolute;
   
   color: #ccc;
-  width: 64px;
-  height: 64px;
   background-image: url('../../resources/16ShipCollection.png');
   background-repeat: no-repeat;
   background-size: 4000px 2480px;

@@ -1,35 +1,37 @@
 import { Component, ReactElement } from 'react';
+import { TimerService } from '../../services/TimerService';
 import './Background.css';
 import { Star } from './Star/Star';
 
 export class Background extends Component<BackgroundProps, BackgroundState> {
 
-  loopStarted = false;
   private maxStarCount = 20;
-  private newStarPossibility = 0.005;
+  private newStarPossibility = 0.05;
+  private timerService: TimerService;
+  private timerLoopHanlderName = '';
 
   stars: ReactElement[] = [];
 
   constructor(props: BackgroundProps) {
     super(props);
+    this.timerService = TimerService.getInstance();
     this.state = {
       nextStarKey: 0,
       currentStarCount: 0,
     };
   }
   componentDidMount() {
-    if (this.loopStarted === false) {
-      this.loopStarted = true;
-      this.gameLoop();
-    }
+    this.timerLoopHanlderName = this.timerService.registerHandler(this.gameLoop.bind(this));
   }
-  gameLoop() {
+  componentWillUnmount() {
+    this.timerService.unregisterHandler(this.timerLoopHanlderName);
+  }
+  gameLoop(currentTimestamp: number, elapsedTime: number) {
     if (this.state.currentStarCount < this.maxStarCount) {
       if (Math.random() <= this.newStarPossibility) {
         this.addNewStar()
       }
     }
-    setTimeout(this.gameLoop.bind(this), 1);
   }
 
   private addNewStar() {
@@ -50,7 +52,7 @@ export class Background extends Component<BackgroundProps, BackgroundState> {
   }
 
   private getNextStarKey(): number {
-    const nextStarKey = this.state.nextStarKey;
+    const nextStarKey = this.state.nextStarKey * 1000 + Math.floor(Math.random() * 1000);
     this.setState((state) => ({ nextStarKey: state.nextStarKey + 1 }));
     return nextStarKey;
   }

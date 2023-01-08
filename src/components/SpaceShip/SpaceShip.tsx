@@ -17,6 +17,8 @@ export class SpaceShip extends Component<SpaceShipProps> {
     return (
       <div className="SpaceShip" style={
         {
+          width: this.width + 'px',
+          height: this.height + 'px',
           left: (this.props.x - this.width / 2) + 'px',
           top: (this.props.y - this.height / 2) + 'px'
         }
