@@ -1,14 +1,9 @@
 import { Component } from 'react';
+import { Config } from '../../../Config';
 import { TimerService } from '../../../services/TimerService';
 import './PlayerBullet.css';
 
-const SPEED_Y = 0.5; // 1 pixels per millisec
-const TOP_BORDER = -50;
-
 export class PlayerBullet extends Component<PlayerBulletProps, PlayerBulletState> {
-  readonly width = 20;
-  readonly height = 10;
-
   private timerService: TimerService;
   private timerLoopHandlerName: string = '';
 
@@ -16,8 +11,8 @@ export class PlayerBullet extends Component<PlayerBulletProps, PlayerBulletState
     super(props);
     this.timerService = TimerService.getInstance();
     this.state = {
-      x: props.x - this.width / 2,
-      y: props.y - this.height / 2
+      x: props.x - Config.PLAYER_BULLET_WIDTH / 2,
+      y: props.y - Config.PLAYER_BULLET_HEIGHT / 2
     };
   }
   componentDidMount() {
@@ -26,9 +21,9 @@ export class PlayerBullet extends Component<PlayerBulletProps, PlayerBulletState
   componentWillUnmount() {
     this.timerService.unregisterHandler(this.timerLoopHandlerName);
   }
-  gameLoop(currentTimestamp: number, elapsedTime: number) {
-    let nextY = this.state.y - elapsedTime * SPEED_Y;
-    if (nextY < TOP_BORDER) {
+  private gameLoop(currentTimestamp: number, elapsedTime: number) {
+    let nextY = this.state.y - elapsedTime * Config.PLAYER_BULLET_SPEED_Y;
+    if (nextY < Config.PLAYER_BULLET_TOP_BORDER) {
       console.log("on top", this.props.bulletKey, nextY);
       this.timerService.unregisterHandler(this.timerLoopHandlerName);
       this.props.onTop(this.props.bulletKey);
@@ -41,10 +36,10 @@ export class PlayerBullet extends Component<PlayerBulletProps, PlayerBulletState
     return (
       <div className="PlayerBullet" style={
         {
-          width: this.width + 'px',
-          height: this.height + 'px',
-          left: (this.props.x - this.width / 2) + 'px',
-          top: (this.state.y - this.height / 2) + 'px'
+          width: Config.PLAYER_BULLET_WIDTH + 'px',
+          height: Config.PLAYER_BULLET_HEIGHT + 'px',
+          left: (this.props.x - Config.PLAYER_BULLET_WIDTH / 2) + 'px',
+          top: (this.state.y - Config.PLAYER_BULLET_HEIGHT / 2) + 'px'
         }
       }></div>
     );

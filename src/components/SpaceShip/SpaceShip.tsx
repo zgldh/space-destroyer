@@ -1,9 +1,10 @@
 import { Component } from 'react';
+import { Config } from '../../Config';
 import './SpaceShip.css';
 
 export class SpaceShip extends Component<SpaceShipProps> {
-  readonly width = 64;
-  readonly height = 64;
+  readonly width = Config.SPACESHIP_WIDTH;
+  readonly height = Config.SPACESHIP_HEIGHT;
 
   constructor(props: SpaceShipProps) {
     super(props);

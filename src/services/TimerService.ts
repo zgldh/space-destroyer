@@ -1,5 +1,6 @@
+import { Config } from "../Config";
+
 export class TimerService {
-    private readonly PLANCK_TIME = 33.3333;
     private lastTimestamp = new Date().getTime();
     private handlers = new Map<TimerHandlerName, TimerHandler>();
     private handleIndex = 0;
@@ -17,7 +18,7 @@ export class TimerService {
 
     public init(): void {
         this.isRunning = true;
-        setTimeout(() => this.timeHandler.apply(this), this.PLANCK_TIME);
+        setTimeout(() => this.timeHandler.apply(this), Config.PLANCK_TIME);
     }
 
     public destroy(): void {
@@ -36,7 +37,7 @@ export class TimerService {
         });
         this.lastTimestamp = currentTimestamp;
 
-        setTimeout(() => this.timeHandler.apply(this), this.PLANCK_TIME);
+        setTimeout(() => this.timeHandler.apply(this), Config.PLANCK_TIME);
     }
 
     public registerHandler(handler: TimerHandler): TimerHandlerName {

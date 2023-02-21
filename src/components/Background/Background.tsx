@@ -1,12 +1,11 @@
 import { Component, ReactElement } from 'react';
+import { Config } from '../../Config';
 import { TimerService } from '../../services/TimerService';
 import './Background.css';
 import { Star } from './Star/Star';
 
 export class Background extends Component<BackgroundProps, BackgroundState> {
 
-  private maxStarCount = 20;
-  private newStarPossibility = 0.05;
   private timerService: TimerService;
   private timerLoopHanlderName = '';
 
@@ -26,9 +25,9 @@ export class Background extends Component<BackgroundProps, BackgroundState> {
   componentWillUnmount() {
     this.timerService.unregisterHandler(this.timerLoopHanlderName);
   }
-  gameLoop(currentTimestamp: number, elapsedTime: number) {
-    if (this.state.currentStarCount < this.maxStarCount) {
-      if (Math.random() <= this.newStarPossibility) {
+  private gameLoop(currentTimestamp: number, elapsedTime: number) {
+    if (this.state.currentStarCount < Config.BACKGROUND_STAR_MAX_COUNT) {
+      if (Math.random() <= Config.BACKGROUND_STAR_PROBABILITY) {
         this.addNewStar()
       }
     }

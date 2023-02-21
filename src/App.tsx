@@ -1,29 +1,24 @@
 import { Component, KeyboardEvent, ReactElement } from 'react';
 import './App.css';
 import { Background } from './components/Background/Background';
+import { EnemyLayer } from './components/Enemy/EnemyLayer';
 import { PlayerBullet } from './components/SpaceShip/PlayerBullet/PlayerBullet';
 import { SpaceShip } from './components/SpaceShip/SpaceShip';
+import { Config } from './Config';
 import { TimerService } from './services/TimerService';
 
 class App extends Component<any, AppState> {
-  readonly speed = 5;
-  readonly spaceBorderTop = 32;
-  readonly spaceBorderBottom = 600 - 32;
-  readonly spaceBorderLeft = 32;
-  readonly spaceBorderRight = 400 - 32;
-
   private timeService: TimerService;
 
   readonly background: ReactElement<Background> = <Background></Background>
 
   // PlayerBullet start
-  playerBulletInterval = 150;
   playerBullets: ReactElement[] = [];
   playerBulletLastTime = 0;
 
   private playerBulletLoop(currentTimestamp: number, elapsedTime: number) {
     // Timestamp
-    if (currentTimestamp - this.playerBulletLastTime < this.playerBulletInterval) {
+    if (currentTimestamp - this.playerBulletLastTime < Config.PLAYER_BULLET_INTERVAL) {
       return;
     }
     this.playerBulletLastTime = currentTimestamp;
@@ -53,8 +48,8 @@ class App extends Component<any, AppState> {
       keyStateRight: false,
       keyStateUp: false,
       keyStateDown: false,
-      spaceShipX: this.spaceBorderRight / 2 + 16,
-      spaceShipY: this.spaceBorderBottom / 10 * 9,
+      spaceShipX: Config.SPACESHIP_START_X,
+      spaceShipY: Config.SPACESHIP_START_Y,
       nextPlayerBulletKey: 1
     };
   }
@@ -62,18 +57,18 @@ class App extends Component<any, AppState> {
     this.timeService.registerHandler(this.gameLoop.bind(this));
   }
 
-  gameLoop(currentTimestamp: number, elapsedTime: number) {
+  private gameLoop(currentTimestamp: number, elapsedTime: number) {
     if (this.state.keyStateLeft) {
-      this.setState((state) => ({ spaceShipX: Math.max(this.spaceBorderTop, state.spaceShipX - this.speed) }));
+      this.setState((state) => ({ spaceShipX: Math.max(Config.SPACE_BORDER_TOP, state.spaceShipX - Config.SPACESHIP_SPEED) }));
     }
     if (this.state.keyStateRight) {
-      this.setState((state) => ({ spaceShipX: Math.min(this.spaceBorderRight, state.spaceShipX + this.speed) }));
+      this.setState((state) => ({ spaceShipX: Math.min(Config.SPACE_BORDER_RIGHT, state.spaceShipX + Config.SPACESHIP_SPEED) }));
     }
     if (this.state.keyStateUp) {
-      this.setState((state) => ({ spaceShipY: Math.max(this.spaceBorderLeft, state.spaceShipY - this.speed) }));
+      this.setState((state) => ({ spaceShipY: Math.max(Config.SPACE_BORDER_LEFT, state.spaceShipY - Config.SPACESHIP_SPEED) }));
     }
     if (this.state.keyStateDown) {
-      this.setState((state) => ({ spaceShipY: Math.min(this.spaceBorderBottom, state.spaceShipY + this.speed) }));
+      this.setState((state) => ({ spaceShipY: Math.min(Config.SPACE_BORDER_BOTTOM, state.spaceShipY + Config.SPACESHIP_SPEED) }));
     }
 
     this.playerBulletLoop(currentTimestamp, elapsedTime);
@@ -101,9 +96,15 @@ class App extends Component<any, AppState> {
       <div className="App" tabIndex={-1}
         onKeyDown={(e) => this.keyStateHandle(e, true)}
         onKeyUp={(e) => this.keyStateHandle(e, false)}>
-        <div className="spaceArea">
+        <div className="spaceArea" style={
+          {
+            height: Config.SPACE_HEIGHT + 'px',
+            width: Config.SPACE_WIDTH + 'px'
+          }
+        }>
           {this.background}
           <div className="PlayerBulletList">{this.playerBullets}</div>
+          <EnemyLayer></EnemyLayer>
           <SpaceShip x={this.state.spaceShipX} y={this.state.spaceShipY}></SpaceShip>
         </div>
       </div>

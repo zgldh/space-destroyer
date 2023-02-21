@@ -1,9 +1,10 @@
 import { Component } from 'react';
+import { Config } from '../../../Config';
 import './Star.css';
 
 export class Star extends Component<StarProps, StarState> {
-  readonly width = 16;
-  readonly height = 16;
+  readonly width = Config.BACKGROUND_STAR_WIDTH;
+  readonly height = Config.BACKGROUND_STAR_HEIGHT;
 
   loopStarted = false;
 
@@ -36,12 +37,15 @@ export class Star extends Component<StarProps, StarState> {
     this.setState({ positionXStep: nextStep });
     this.setState({ backgroundPositionX: StarPositionX - (20 * nextStep) });
 
-    setTimeout(this.gameLoop.bind(this), 250);
+    setTimeout(this.gameLoop.bind(this), Config.BACKGROUND_STAR_INTERVAL);
   }
 
   private getMovementDuration(movementDurtion: number | undefined): number {
     if (!movementDurtion) {
-      movementDurtion = Math.ceil((Math.random() * 100 + 50)) / 10;
+      movementDurtion = Math.ceil((Math.random() * (
+        Config.BACKGROUND_STAR_MOVEMENT_SPEED_MAX -
+        Config.BACKGROUND_STAR_MOVEMENT_SPEED_MIN
+      ) + Config.BACKGROUND_STAR_MOVEMENT_SPEED_MIN)) / 10;
     }
     return movementDurtion;
   }

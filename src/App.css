@@ -19,8 +19,6 @@ body,
   text-align: center;
   border: 1px solid #ccc;
   background: #000;
-  height: 600px;
-  width: 400px;
   overflow: hidden;
   position: relative;
   margin: auto;
