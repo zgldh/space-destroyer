@@ -7,5 +7,5 @@ div.PlayerBullet {
   background-size: 520px 361px;
   background-position: -248px -50px;
   image-rendering: pixelated;
-  rotate: -90deg;
+  transform: rotate(-90deg);
 }
