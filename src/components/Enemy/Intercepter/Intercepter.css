@@ -2,7 +2,7 @@ div.Intercepter {
   position: absolute;
   
   color: #ccc;
-  background-image: url('../../resources/16ShipCollection.png');
+  background-image: url('../../../resources/16ShipCollection.png');
   background-repeat: no-repeat;
   background-size: 4000px 2480px;
   background-position: -552px -168px;

@@ -21,15 +21,15 @@ export class PlayerBullet extends Component<PlayerBulletProps, PlayerBulletState
   componentWillUnmount() {
     this.timerService.unregisterHandler(this.timerLoopHandlerName);
   }
-  private gameLoop(currentTimestamp: number, elapsedTime: number) {
+  private gameLoop(currentTimestamp: number, elapsedTime: number): boolean {
     let nextY = this.state.y - elapsedTime * Config.PLAYER_BULLET_SPEED_Y;
     if (nextY < Config.PLAYER_BULLET_TOP_BORDER) {
-      console.log("on top", this.props.bulletKey, nextY);
       this.timerService.unregisterHandler(this.timerLoopHandlerName);
       this.props.onTop(this.props.bulletKey);
     } else {
       this.setState({ y: nextY });
     }
+    return true;
   }
 
   render() {

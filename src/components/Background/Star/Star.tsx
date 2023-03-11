@@ -1,15 +1,18 @@
 import { Component } from 'react';
 import { Config } from '../../../Config';
+import { TimerService } from '../../../services/TimerService';
 import './Star.css';
 
 export class Star extends Component<StarProps, StarState> {
   readonly width = Config.BACKGROUND_STAR_WIDTH;
   readonly height = Config.BACKGROUND_STAR_HEIGHT;
 
-  loopStarted = false;
+  private timerService: TimerService;
+  private timerLoopHanlderName = '';
 
   constructor(props: StarProps) {
     super(props);
+    this.timerService = TimerService.getInstance();
     this.state = {
       x: this.props.x,
       positionXDirection: 1,
@@ -19,16 +22,18 @@ export class Star extends Component<StarProps, StarState> {
       movementDuration: this.getMovementDuration(props.movementDurtion),
     };
   }
-
   componentDidMount() {
-    if (this.loopStarted === false) {
-      this.loopStarted = true;
-      setTimeout(() => this.props.onBottom(), this.state.movementDuration * 1000);
-      this.gameLoop();
-    }
+    this.timerLoopHanlderName = this.timerService.registerHandler(this.gameLoop.bind(this));
+    setTimeout(() => this.props.onBottom(), this.state.movementDuration * 1000);
+  }
+  componentWillUnmount() {
+    this.timerService.unregisterHandler(this.timerLoopHanlderName);
   }
 
-  gameLoop() {
+  gameLoop(currentTimestamp: number, elapsedTime: number): boolean {
+    if (elapsedTime < Config.BACKGROUND_STAR_INTERVAL) {
+      return false;
+    }
     let nextStep = this.state.positionXStep + this.state.positionXDirection;
     if (nextStep < 0 || nextStep > 4) {
       nextStep = nextStep - (this.state.positionXDirection * 2);
@@ -36,8 +41,7 @@ export class Star extends Component<StarProps, StarState> {
     }
     this.setState({ positionXStep: nextStep });
     this.setState({ backgroundPositionX: StarPositionX - (20 * nextStep) });
-
-    setTimeout(this.gameLoop.bind(this), Config.BACKGROUND_STAR_INTERVAL);
+    return true;
   }
 
   private getMovementDuration(movementDurtion: number | undefined): number {

@@ -1,9 +1,11 @@
 import { ReactElement } from "react";
+import { Intercepter } from "../components/Enemy/Intercepter/Intercepter";
+import { Config } from "../Config";
 import { TimerService } from "./TimerService";
 
 export class EnemyService {
     private static instance: EnemyService;
-    private nextEnemyKey: EnemyKey;
+    private nextEnemyKey: EnemyKey = 0;
     private currentEnemyCount: number;
     private enemies: ReactElement[] = [];
 
@@ -19,7 +21,6 @@ export class EnemyService {
     public static getInstance(): EnemyService {
         if (EnemyService.instance == null) {
             EnemyService.instance = new EnemyService();
-            EnemyService.instance.init();
         }
         return EnemyService.instance;
     }
@@ -39,29 +40,37 @@ export class EnemyService {
     }
 
     /**
-     * TODO
      * @param enemyType 
      * @param x 
      * @param y 
      */
     public addEnemy(enemyType: string, x: number, y: number): EnemyKey {
-        throw new Error(`addEnemy not implemented`)
+        const enemyKey = this.getNextEnemyKey();
+        this.enemies.push(<Intercepter key={enemyKey} enemyKey={enemyKey} x={x} y={y} />);
+        this.currentEnemyCount++;
+        return enemyKey;
     }
 
     public removeEnemy(enemyKey: EnemyKey): void {
         this.enemies.splice(this.enemies.findIndex(item => item.key === `${enemyKey}`), 1);
+        this.currentEnemyCount--;
     }
 
-    private gameLoop(currentTimestamp: number, elapsedTime: number) {
-        if(this.currentEnemyCount === 0){
-            // this.addEnemy('a',);
+    private gameLoop(currentTimestamp: number, elapsedTime: number): boolean {
+        if (this.currentEnemyCount < 10 && elapsedTime > 1000) {
+            this.addEnemy('dummy', this.getStartX(), - Config.ENEMY_HEIGHT);
+            return true;
         }
+        return false;
+    }
+
+    private getStartX(): number {
+        return Config.ENEMY_WIDTH + (Config.SPACE_WIDTH - Config.ENEMY_WIDTH) * Math.random();
     }
 
     private getNextEnemyKey(): number {
-        const nextEnemyKey = this.nextEnemyKey * 1000 + Math.floor(Math.random() * 1000);
         this.nextEnemyKey = this.nextEnemyKey + 1;
-        return nextEnemyKey;
+        return this.nextEnemyKey;
     }
 }
 

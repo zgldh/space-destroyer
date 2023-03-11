@@ -1,8 +1,7 @@
 import { Config } from "../Config";
 
 export class TimerService {
-    private lastTimestamp = new Date().getTime();
-    private handlers = new Map<TimerHandlerName, TimerHandler>();
+    private handlers = new Map<TimerHandlerName, TimerHandlerInfo>();
     private handleIndex = 0;
     private isRunning = false;
 
@@ -31,18 +30,26 @@ export class TimerService {
             return;
         }
         const currentTimestamp = new Date().getTime();
-        const elapsedTime = currentTimestamp - this.lastTimestamp
-        this.handlers.forEach((handler) => {
-            handler(currentTimestamp, elapsedTime);
+        this.handlers.forEach((handlerInfo) => {
+            const elapsedTime = currentTimestamp - handlerInfo.lastTimestamp;
+            const timerResult = handlerInfo.handler(currentTimestamp, elapsedTime);
+            if(true === timerResult){
+                // The timer handler does processed. Update the lastTimestamp
+                handlerInfo.lastTimestamp = currentTimestamp;
+            }
         });
-        this.lastTimestamp = currentTimestamp;
 
         setTimeout(() => this.timeHandler.apply(this), Config.PLANCK_TIME);
     }
 
     public registerHandler(handler: TimerHandler): TimerHandlerName {
         const handlerName = this.getNextHandlerName();
-        this.handlers.set(handlerName, handler);
+        const timerHandlerInfo:TimerHandlerInfo = {
+            name : handlerName,
+            handler,
+            lastTimestamp: new Date().getTime()
+        }
+        this.handlers.set(handlerName, timerHandlerInfo);
         return handlerName;
     }
 
@@ -59,4 +66,14 @@ export class TimerService {
 }
 
 export type TimerHandlerName = string;
-export type TimerHandler = (currentTimestamp: number, elapsedTime: number) => void
+/**
+ * Timer handler. 
+ * Return true if the handler is well processed. Then the lastTimestamp will be updated so it will get correct elapsedTime next tick.
+ * Return false will not update the lastTimestamp. So the elapsedTime will get larger when next tick.
+ */
+export type TimerHandler = (currentTimestamp: number, elapsedTime: number) => boolean
+export interface TimerHandlerInfo {
+    name: TimerHandlerName;
+    handler: TimerHandler;
+    lastTimestamp: number;
+} 

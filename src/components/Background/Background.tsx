@@ -25,12 +25,14 @@ export class Background extends Component<BackgroundProps, BackgroundState> {
   componentWillUnmount() {
     this.timerService.unregisterHandler(this.timerLoopHanlderName);
   }
-  private gameLoop(currentTimestamp: number, elapsedTime: number) {
+  private gameLoop(currentTimestamp: number, elapsedTime: number): boolean {
     if (this.state.currentStarCount < Config.BACKGROUND_STAR_MAX_COUNT) {
       if (Math.random() <= Config.BACKGROUND_STAR_PROBABILITY) {
         this.addNewStar()
+        return true;
       }
     }
+    return false;
   }
 
   private addNewStar() {

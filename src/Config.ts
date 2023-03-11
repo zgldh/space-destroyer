@@ -27,4 +27,7 @@ export namespace Config {
   export const SPACESHIP_START_X = SPACE_WIDTH / 2;
   export const SPACESHIP_START_Y = SPACE_HEIGHT / 10 * 9;
   export const SPACESHIP_SPEED = 5;
+
+  export const ENEMY_HEIGHT = 64;
+  export const ENEMY_WIDTH = 64;
 }

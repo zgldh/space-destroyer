@@ -25,7 +25,7 @@ class App extends Component<any, AppState> {
 
     // Fire new bullet
     const bulletKey = this.getNextBulletKey();
-    this.playerBullets.push(<PlayerBullet key={bulletKey.toString()} bulletKey={bulletKey} x={this.state.spaceShipX} y={this.state.spaceShipY}
+    this.playerBullets.push(<PlayerBullet key={bulletKey.toString()} bulletKey={bulletKey} x={this.state.spaceShipX} y={this.state.spaceShipY - Config.SPACESHIP_HEIGHT / 2}
       onTop={(bulletKey) => {
         this.removePlayerBullet(bulletKey)
       }} />)
@@ -57,7 +57,7 @@ class App extends Component<any, AppState> {
     this.timeService.registerHandler(this.gameLoop.bind(this));
   }
 
-  private gameLoop(currentTimestamp: number, elapsedTime: number) {
+  private gameLoop(currentTimestamp: number, elapsedTime: number): boolean {
     if (this.state.keyStateLeft) {
       this.setState((state) => ({ spaceShipX: Math.max(Config.SPACE_BORDER_TOP, state.spaceShipX - Config.SPACESHIP_SPEED) }));
     }
@@ -72,6 +72,7 @@ class App extends Component<any, AppState> {
     }
 
     this.playerBulletLoop(currentTimestamp, elapsedTime);
+    return true;
   }
 
   keyStateHandle(event: KeyboardEvent<HTMLDivElement>, state: boolean) {
