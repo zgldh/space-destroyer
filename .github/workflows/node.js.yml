@@ -30,14 +30,12 @@ jobs:
     - name: Replace Version
       # You may pin to the exact commit or the version.
       # uses: visiosto/replace-value@7f3c03b1e89bac94997b4cac35d56b97c4eb4ebf
-      uses: visiosto/replace-value@v1.2.1
+      uses: prabhakarareddygaddam-mcd/replace-action@1.0.0
       with:
         # The file where the content to replace is.
         file: public/index.html
         # The value that will be replaced.
-        replaced: VERSION_PLACEHOLDER
-        # The value that the original value is replaced with.
-        value: ${{ env.version }}
+        replacements: VERSION_PLACEHOLDER=${{ env.version }}
     - run: npm ci
     - run: npm run build --if-present
 #     - run: npm test
