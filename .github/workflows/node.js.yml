@@ -33,7 +33,7 @@ jobs:
       uses: prabhakarareddygaddam-mcd/replace-action@1.0.0
       with:
         # The file where the content to replace is.
-        file: public/index.html
+        files: public/index.html
         # The value that will be replaced.
         replacements: VERSION_PLACEHOLDER=${{ env.version }}
     - run: npm ci
